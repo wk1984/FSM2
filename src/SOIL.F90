@@ -3,6 +3,8 @@
 !-----------------------------------------------------------------------
 subroutine SOIL(csoil,Gsoil,ksoil)
 
+#include "OPTS.h"
+
 use DRIVING, only: &
   dt                  ! Timestep (s)
 

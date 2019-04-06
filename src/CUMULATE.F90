@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------
-! Cumulate diagnostics
+! Cumulate fluxes
 !-----------------------------------------------------------------------
-subroutine CUMULATE(alb,Gsurf,Hatmo,Latmo,Melt,Rnet,Roff)
+subroutine CUMULATE(alb,G,Gsoil,H,Hsrf,LE,LEsrf,Melt,Rnet,Roff,Rsrf)
 
 use CONSTANTS, only: &
+  Lf,                &! Latent heat of fusion (J/kg)
   Tm                  ! Melting point (K)
 
 use DIAGNOSTICS, only: &
@@ -19,30 +20,32 @@ use DRIVING, only: &
 use GRID, only: &
   Nx,Ny               ! Grid dimensions
 
-use STATE_VARIABLES, only: &
-  Tsoil,             &! Soil layer temperatures (K)
-  Tsurf               ! Surface skin temperature (K)
-
 implicit none
 
 real, intent(in) :: &
   alb(Nx,Ny),        &! Albedo
-  Gsurf(Nx,Ny),      &! Heat flux into surface (W/m^2)
-  Hatmo(Nx,Ny),      &! Sensible heat flux to the atmosphere (W/m^2)
-  Latmo(Nx,Ny),      &! Latent heat flux to the atmosphere (W/m^2)
+  G(Nx,Ny),          &! Heat flux into surface (W/m^2)
+  Gsoil(Nx,Ny),      &! Heat flux into soil (W/m^2)
+  H(Nx,Ny),          &! Sensible heat flux to the atmosphere (W/m^2)
+  Hsrf(Nx,Ny),       &! Sensible heat flux from the surface (W/m^2)
+  LE(Nx,Ny),         &! Latent heat flux to the atmosphere (W/m^2)
+  LEsrf(Nx,Ny),      &! Latent heat flux from the surface (W/m^2)
   Melt(Nx,Ny),       &! Surface melt rate (kg/m^2/s)
   Rnet(Nx,Ny),       &! Net radiation (W/m^2)
-  Roff(Nx,Ny)         ! Runoff from snow (kg/m^2)
+  Roff(Nx,Ny),       &! Runoff from snow (kg/m^2)
+  Rsrf(Nx,Ny)         ! Net radiation absorbed by the surface (W/m^2)
 
 SWin(:,:) = SWin (:,:)+ SW(:,:)*dt
 SWout(:,:) = SWout(:,:) + alb(:,:)*SW(:,:)*dt
-diags(:,:,1) = diags(:,:,1) + Gsurf(:,:)
-diags(:,:,2) = diags(:,:,2) + Hatmo(:,:)
-diags(:,:,3) = diags(:,:,3) + Latmo(:,:)
-diags(:,:,4) = diags(:,:,4) + Melt(:,:) * dt * Nave
-diags(:,:,5) = diags(:,:,5) + Rnet(:,:)
-diags(:,:,6) = diags(:,:,6) + Roff(:,:) * Nave
-diags(:,:,7) = diags(:,:,7) + Tsurf(:,:) - Tm
-diags(:,:,8) = diags(:,:,8) + Tsoil(2,:,:) - Tm
+diags(:,:,1) = diags(:,:,1) + G(:,:)
+diags(:,:,2) = diags(:,:,2) + Gsoil(:,:)
+diags(:,:,3) = diags(:,:,3) + H(:,:)
+diags(:,:,4) = diags(:,:,4) + Hsrf(:,:)
+diags(:,:,5) = diags(:,:,5) + LE(:,:)
+diags(:,:,6) = diags(:,:,6) + LEsrf(:,:)
+diags(:,:,7) = diags(:,:,7) + Lf*Melt(:,:)
+diags(:,:,8) = diags(:,:,8) + Rnet(:,:)
+diags(:,:,9) = diags(:,:,9) + Roff(:,:) * Nave
+diags(:,:,10) = diags(:,:,10) + Rsrf(:,:)
 
 end subroutine CUMULATE

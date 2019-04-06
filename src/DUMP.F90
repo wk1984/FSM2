@@ -11,6 +11,7 @@ use STATE_VARIABLES, only : &
   Ds,                &! Snow layer thicknesses (m)
   Nsnow,             &! Number of snow layers 
   Qcan,              &! Canopy air space humidity
+  rgrn,              &! Snow layer grain radius (m)
   Sice,              &! Ice content of snow layers (kg/m^2)
   Sliq,              &! Liquid content of snow layers (kg/m^2)
   Sveg,              &! Canopy snow mass (kg/m^2)
@@ -18,7 +19,7 @@ use STATE_VARIABLES, only : &
   theta,             &! Volumetric moisture content of soil layers
   Tsnow,             &! Snow layer temperatures (K)
   Tsoil,             &! Soil layer temperatures (K)
-  Tsurf,             &! Surface skin temperature (K)
+  Tsrf,              &! Surface skin temperature (K)
   Tveg                ! Vegetation temperature (K)
 
 implicit none
@@ -27,6 +28,7 @@ write(udmp,*) albs(:,:)
 write(udmp,*) Ds(:,:,:)
 write(udmp,*) Nsnow(:,:)
 write(udmp,*) Qcan(:,:)
+write(udmp,*) rgrn(:,:,:)
 write(udmp,*) Sice(:,:,:)
 write(udmp,*) Sliq(:,:,:)
 write(udmp,*) Sveg(:,:)
@@ -34,7 +36,7 @@ write(udmp,*) Tcan(:,:)
 write(udmp,*) theta(:,:,:)
 write(udmp,*) Tsnow(:,:,:)
 write(udmp,*) Tsoil(:,:,:)
-write(udmp,*) Tsurf(:,:)
+write(udmp,*) Tsrf(:,:)
 write(udmp,*) Tveg(:,:)
 close(udmp)
 
